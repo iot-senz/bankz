@@ -62,16 +62,18 @@
                             android:layout_width="fill_parent"
                             android:layout_height="40dp"
                             android:paddingLeft="15dp"
-                            android:hint="Username"
+                            android:hint="Agent Account Number[12digits]"
                             android:textSize="16sp"
                             android:singleLine="true"
                             android:textStyle="bold"
                             android:textColor="#ffffff"
                             android:textColorHint="#ffffff"
-                            android:inputType="text"
+                            android:inputType="numberDecimal"
                             android:layout_toRightOf="@+id/country_code"
                             android:background="@drawable/username_field_shape"
-                            android:id="@+id/registration_phone_no">
+                            android:id="@+id/registration_phone_no"
+                            android:maxLength="12"
+                            android:selectAllOnFocus="false">
                     </EditText>
 
                 </RelativeLayout>

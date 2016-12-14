@@ -38,7 +38,7 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 
-/**
+/**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * Remote service which handles UDP related functions
  *
  * @author eranga herath(erangaeb@gamil.com)
@@ -51,7 +51,10 @@ public class RemoteSenzService extends Service implements ShareSenzListener {
     //private static final String SENZ_HOST = "udp.mysensors.info";192.168.43.42
     //private static final String SENZ_HOST = "192.168.43.42";
     //private static final String SENZ_HOST = "10.4.1.29";
-    private static final String SENZ_HOST = "192.168.22.171";
+    //private static final String SENZ_HOST = "10.22.196.108";
+    //private static final String SENZ_HOST = "192.168.22.171";
+    private static final String SENZ_HOST = "10.100.31.34";
+    //private static final String SENZ_HOST = "103.227.245.129";
     private static final int SENZ_PORT = 9090;
 
     // we are listing for UDP socket

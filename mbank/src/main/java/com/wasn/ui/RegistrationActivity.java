@@ -29,6 +29,7 @@ import com.score.senzc.enums.SenzTypeEnum;
 import com.score.senzc.pojos.Senz;
 import com.score.senzc.pojos.User;
 import com.wasn.R;
+import com.wasn.exceptions.InvalidAccountException;
 import com.wasn.exceptions.InvalidInputFieldsException;
 import com.wasn.services.RemoteSenzService;
 import com.wasn.utils.ActivityUtils;
@@ -151,6 +152,11 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             ActivityUtils.isValidRegistrationFields(registeringUser);
             String confirmationMessage = "<font color=#000000>Are you sure you want to register on SenZ with </font> <font color=#ffc027>" + "<b>" + registeringUser.getUsername() + "</b>" + "</font>";
             displayConfirmationMessageDialog(confirmationMessage);
+        }
+        catch (InvalidAccountException e) {
+            e.printStackTrace();
+
+            displayMessageDialog("#ERROR", "Agent Account no should be 12 character length");
         } catch (InvalidInputFieldsException e) {
             Toast.makeText(this, "Invalid username", Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -281,7 +287,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     PreferenceUtils.saveUser(getApplicationContext(), registeringUser);
                     navigateToHome();
                 } else {
-                    String informationMessage = "<font color=#4a4a4a>Seems username </font> <font color=#eada00>" + "<b>" + registeringUser.getUsername() + "</b>" + "</font> <font color=#4a4a4a> already obtained by some other user, try SenZ with different username</font>";
+                    //String informationMessage = "<font color=#4a4a4a>Seems username </font> <font color=#eada00>" + "<b>" + registeringUser.getUsername() + "</b>" + "</font> <font color=#4a4a4a> already obtained by some other user, try SenZ with different username</font>";
+                    String informationMessage = "<font color=#4a4a4a>Seems username </font> <font color=#eada00>" + "<b>" + registeringUser.getUsername() + "</b>" + "</font> <font color=#4a4a4a> is not a valid Agent Account Number, Recheck it and enter it correctly again</font>";
                     displayInformationMessageDialog("Registration fail", informationMessage);
                 }
             }
@@ -392,6 +399,40 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     public void onBackPressed() {
         super.onBackPressed();
         this.overridePendingTransition(R.anim.stay_in, R.anim.bottom_out);
+    }
+
+    public void displayMessageDialog(String messageHeader, String message) {
+        final Dialog dialog = new Dialog(this);
+
+        //set layout for dialog
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.information_message_dialog);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(true);
+
+        // set dialog texts
+        TextView messageHeaderTextView = (TextView) dialog.findViewById(R.id.information_message_dialog_layout_message_header_text);
+        TextView messageTextView = (TextView) dialog.findViewById(R.id.information_message_dialog_layout_message_text);
+        messageHeaderTextView.setText(messageHeader);
+        messageTextView.setText(message);
+
+        // set custom font
+        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/vegur_2.otf");
+        messageHeaderTextView.setTypeface(face);
+        messageHeaderTextView.setTypeface(null, Typeface.BOLD);
+        messageTextView.setTypeface(face);
+
+        //set ok button
+        Button okButton = (Button) dialog.findViewById(R.id.information_message_dialog_layout_ok_button);
+        okButton.setTypeface(face);
+        okButton.setTypeface(null, Typeface.BOLD);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
     }
 
 }

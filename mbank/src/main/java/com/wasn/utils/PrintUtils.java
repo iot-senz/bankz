@@ -186,10 +186,10 @@ public class PrintUtils {
 
 
         // transaction details that print in receipt
-        //String name   = "      Name               : "+transaction.getClientName()+"\r\n";
-        //String nic    = "      NIC no             : "+transaction.getClientNic()+"\r\n";
+        String name   = "      Name               : "+transaction.getClientName()+"\r\n";
+        String nic    = "      NIC no             : "+transaction.getClientNic()+"\r\n";
         String accNo  = "      Account No         : "+transaction.getClientAccountNo()+"\r\n";
-        //String type   = "      Transaction type   : "+transaction.getTransactionType()+"\r\n";
+        String type   = "      Transaction type   : "+transaction.getTransactionType()+"\r\n";
         String time   = "      Transaction time   : "+transaction.getTransactionTime()+"\r\n";
         String amount = "      Transaction amount : "+transaction.getTransactionAmount()+ ".00" + "\r\n\r\n\r\n";
 
@@ -205,10 +205,10 @@ public class PrintUtils {
             outputStream.write(branch.getBytes());
             outputStream.write(telephoneNo.getBytes());
             outputStream.write(receiptType.getBytes());
-            //outputStream.write(name.getBytes());
-            //outputStream.write(nic.getBytes());
+            outputStream.write(name.getBytes());
+            outputStream.write(nic.getBytes());
             outputStream.write(accNo.getBytes());
-            //outputStream.write(type.getBytes());
+            outputStream.write(type.getBytes());
             outputStream.write(time.getBytes());
             outputStream.write(amount.getBytes());
             outputStream.write(sign.getBytes());
@@ -228,10 +228,10 @@ public class PrintUtils {
             outputStream.write(branch.getBytes());
             outputStream.write(telephoneNo.getBytes());
             outputStream.write(receiptType.getBytes());
-            //outputStream.write(name.getBytes());
-            //outputStream.write(nic.getBytes());
+            outputStream.write(name.getBytes());
+            outputStream.write(nic.getBytes());
             outputStream.write(accNo.getBytes());
-            //outputStream.write(type.getBytes());
+            outputStream.write(type.getBytes());
             outputStream.write(time.getBytes());
             outputStream.write(amount.getBytes());
             outputStream.write(sign.getBytes());
@@ -355,12 +355,14 @@ public class PrintUtils {
 
 
         // transaction details that print in receipt
-        //String name   = "      Name               : "+transaction.getClientName()+"\r\n";
-        //String nic    = "      NIC no             : "+transaction.getClientNic()+"\r\n";
+        String name   = "      Name               : "+transaction.getClientName()+"\r\n";
+        String nic    = "      NIC no             : "+transaction.getClientNic()+"\r\n";
         String accNo  = "      Account No         : "+transaction.getClientAccountNo()+"\r\n";
-        //String type   = "      Transaction type   : "+transaction.getTransactionType()+"\r\n";
+        String type   = "      Transaction type   : "+transaction.getTransactionType()+"\r\n";
         String time   = "      Transaction time   : "+transaction.getTransactionTime()+"\r\n";
         String amount = "      Transaction amount : "+transaction.getTransactionAmount()+"\r\n\r\n\r\n";
+        //String balance= "      Balance            : "+transaction.getPreviousBalance()+"\r\n";
+        //String recNo  = "      Receipt No         : "+transaction.getRec()+"\r\n\r\n\r\n";
 
         String sign   = "..................          ..................\r\n";
         String end    = "    Customer                       Agent      \r\n\r\n\r\n";
@@ -374,10 +376,10 @@ public class PrintUtils {
             outputStream.write(branch.getBytes());
             outputStream.write(telephoneNo.getBytes());
             outputStream.write(receiptType.getBytes());
-            //outputStream.write(name.getBytes());
-            //outputStream.write(nic.getBytes());
+            outputStream.write(name.getBytes());
+            outputStream.write(nic.getBytes());
             outputStream.write(accNo.getBytes());
-            //outputStream.write(type.getBytes());
+            outputStream.write(type.getBytes());
             outputStream.write(time.getBytes());
             outputStream.write(amount.getBytes());
             outputStream.write(sign.getBytes());
