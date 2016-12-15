@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wasn.R;
@@ -39,8 +40,9 @@ public class SplashActivity extends Activity {
      */
     private void initUi() {
         Typeface typefaceThin = Typeface.createFromAsset(getAssets(), "fonts/vegur_2.otf");
-        TextView appName = (TextView) findViewById(R.id.splash_text);
-        appName.setTypeface(typefaceThin, Typeface.BOLD);
+        //TextView appName = (TextView) findViewById(R.id.splash_text);
+        ImageView appName = (ImageView) findViewById(R.id.imageView1);
+        //appName.setTypeface(typefaceThin, Typeface.BOLD);
     }
 
     /**

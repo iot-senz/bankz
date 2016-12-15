@@ -6,21 +6,17 @@
         android:layout_width="fill_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="#306d97">
+        android:background="#306d97"
+    android:weightSum="1">
 
-    <TextView
-            android:layout_marginTop="12dp"
-            android:id="@+id/splash_text"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:text="#"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:textSize="45sp"
-            android:textStyle="bold"
-            android:textColor="#306d97"
-            android:background="@drawable/circle_shape_white">
-    </TextView>
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@drawable/sdb_logo"
+        android:layout_weight="0.08" />
+
 
     <!--<TextView-->
             <!--android:layout_marginTop="12dp"-->
