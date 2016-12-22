@@ -29,6 +29,7 @@ public class SenzorsDbHelper extends SQLiteOpenHelper {
                     SenzorsDbContract.Transaction.COLUMN_NAME_CLIENTNAME + " " + TEXT_TYPE + ", " +
                     SenzorsDbContract.Transaction.COLUMN_NAME_previousBalance + " " + NUMBER_TYPE + ", " +
                     SenzorsDbContract.Transaction.COLUMN_NAME_transactionAmount + " " + NUMBER_TYPE + " NOT NULL" + ", " +
+                    SenzorsDbContract.Transaction.COLUMN_NAME_phoneNo + " " + NUMBER_TYPE + " NOT NULL" + ", " +
                     SenzorsDbContract.Transaction.COLUMN_NAME_transactionTime + " " + NUMBER_TYPE + " NOT NULL" + ", " +
                     SenzorsDbContract.Transaction.COLUMN_NAME_transactionType + " " + TEXT_TYPE + "," +
                     SenzorsDbContract.Transaction.COLUMN_NAME_clientNIC + " " + TEXT_TYPE +

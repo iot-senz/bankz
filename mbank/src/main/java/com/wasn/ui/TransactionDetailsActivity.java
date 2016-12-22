@@ -89,7 +89,9 @@ public class TransactionDetailsActivity extends Activity implements View.OnClick
             attributesList.add(new Attribute("Account No", transaction.getClientAccountNo()));
             //attributesList.add(new Attribute("Transaction Type", transaction.getTransactionType()));
             attributesList.add(new Attribute("Amount", Integer.toString(transaction.getTransactionAmount())));
+            attributesList.add(new Attribute("Phone No", transaction.getPhoneNo()));
             attributesList.add(new Attribute("Time", transaction.getTransactionTime()));
+
 
             // populate list
             transactionDetailsListView = (ListView) findViewById(R.id.transaction_details_list);

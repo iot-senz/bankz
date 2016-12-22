@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.score.senzc.pojos.User;
 import com.wasn.exceptions.InvalidAccountException;
 import com.wasn.exceptions.InvalidInputFieldsException;
+import com.wasn.exceptions.InvalidPhoneNoException;
 
 /**
  * Utility class to handle activity related common functions
@@ -81,13 +82,17 @@ public class ActivityUtils {
         return true;
     }
 
-    public static boolean isValidTransactionFields(String account, int amount) throws InvalidInputFieldsException, InvalidAccountException {
-        if (account == null || account.isEmpty() || amount == 0) {
+    public static boolean isValidTransactionFields(String account, int amount, String phoneNo) throws InvalidInputFieldsException, InvalidAccountException, InvalidPhoneNoException {
+        if (account == null || account.isEmpty() || amount == 0 || phoneNo == null || phoneNo.isEmpty()) {
             throw new InvalidInputFieldsException();
         }
 
         if (account.length()!=12) {
             throw new InvalidAccountException();
+        }
+
+        if (phoneNo.length() != 10) {
+            throw new InvalidPhoneNoException();
         }
 
         return true;

@@ -55,6 +55,18 @@
                 android:textColor="#4a4a4a">
             </TextView>
 
+            <TextView
+                android:id="@+id/phoneNo"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/amount"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="15dp"
+                android:text="0775434015"
+                android:textColor="#4a4a4a"></TextView>
+
+
         </RelativeLayout>
 
 

@@ -19,6 +19,7 @@ public class Transaction implements Parcelable{
     int transactionAmount;
     String transactionTime;
     String transactionType;
+    String phoneNo;
 
     public Transaction(int id,
                        String clientName,
@@ -27,7 +28,8 @@ public class Transaction implements Parcelable{
                        String previousBalance,
                        int transactionAmount,
                        String transactionTime,
-                       String transactionType) {
+                       String transactionType,
+                       String phoneNo) {
         this.id = id;
         this.clientName = clientName;
         this.clientNic = clientNic;
@@ -36,6 +38,7 @@ public class Transaction implements Parcelable{
         this.transactionAmount = transactionAmount;
         this.transactionTime = transactionTime;
         this.transactionType = transactionType;
+        this.phoneNo = phoneNo;
     }
 
     protected Transaction(Parcel in) {
@@ -47,6 +50,7 @@ public class Transaction implements Parcelable{
         transactionAmount = in.readInt();
         transactionTime = in.readString();
         transactionType = in.readString();
+        phoneNo = in.readString();
     }
 
     public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
@@ -125,6 +129,14 @@ public class Transaction implements Parcelable{
         this.transactionType = transactionType;
     }
 
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -140,5 +152,6 @@ public class Transaction implements Parcelable{
         parcel.writeInt(transactionAmount);
         parcel.writeString(transactionTime);
         parcel.writeString(transactionType);
+        parcel.writeString(phoneNo);
     }
 }

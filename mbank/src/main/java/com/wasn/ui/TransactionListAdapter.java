@@ -87,10 +87,12 @@ public class TransactionListAdapter extends BaseAdapter {
             holder.iconText = (TextView) view.findViewById(R.id.icon_text);
             holder.account = (TextView) view.findViewById(R.id.account_no);
             holder.amount = (TextView) view.findViewById(R.id.amount);
+            holder.phoneNo = (TextView) view.findViewById(R.id.phoneNo);
             holder.iconText.setTypeface(typeface, Typeface.BOLD);
             holder.iconText.setTextColor(context.getResources().getColor(R.color.white));
             holder.account.setTypeface(typeface, Typeface.BOLD);
             holder.amount.setTypeface(typeface, Typeface.NORMAL);
+            holder.phoneNo.setTypeface(typeface, Typeface.NORMAL);
 
             view.setTag(holder);
         } else {
@@ -102,6 +104,7 @@ public class TransactionListAdapter extends BaseAdapter {
         holder.iconText.setText("$");
         holder.account.setText(transaction.getClientAccountNo());
         holder.amount.setText(transaction.getTransactionAmount()+"");
+        holder.phoneNo.setText(transaction.getPhoneNo() + "");
         view.setBackgroundResource(R.drawable.more_layout_selector_normal);
 
         return view;
@@ -114,6 +117,7 @@ public class TransactionListAdapter extends BaseAdapter {
         TextView iconText;
         TextView account;
         TextView amount;
+        TextView phoneNo;
     }
 
 }

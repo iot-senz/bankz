@@ -24,9 +24,9 @@ public class TransactionUtils {
      * @param accountNo
      * @param amount
      */
-    public static void validateFields(String accountNo, String amount) throws EmptyFieldsException, NumberFormatException {
+    public static void validateFields(String accountNo, String amount, String phoneNo) throws EmptyFieldsException, NumberFormatException {
         // check empty of fields
-        if (accountNo.equals("") || amount.equals("")) {
+        if (accountNo.equals("") || amount.equals("") || phoneNo.equals("")) {
             throw new EmptyFieldsException();
         }
 
@@ -47,7 +47,7 @@ public class TransactionUtils {
      * @return transaction
      * @throws InvalidAccountException
      */
-    public static Transaction createTransaction(String branchId, int transactionId, String amount) throws InvalidAccountException, InvalidBalanceAmountException {
+    public static Transaction createTransaction(String branchId, int transactionId, String amount, String phoneNo) throws InvalidAccountException, InvalidBalanceAmountException {
         Transaction transaction = new Transaction(
                 3,
                 "Name",
@@ -56,7 +56,8 @@ public class TransactionUtils {
                 amount,
                 3400,
                 getCurrentTime(),
-                "DEPOSIT");
+                "DEPOSIT",
+                phoneNo);
 
         return transaction;
     }

@@ -36,6 +36,7 @@ public class SenzorsDbSource {
         values.put(SenzorsDbContract.Transaction.COLUMN_NAME_transactionTime, transaction.getTransactionTime());
         values.put(SenzorsDbContract.Transaction.COLUMN_NAME_transactionType, transaction.getTransactionType());
         values.put(SenzorsDbContract.Transaction.COLUMN_NAME_clientNIC, transaction.getClientNic());
+        values.put(SenzorsDbContract.Transaction.COLUMN_NAME_phoneNo, transaction.getPhoneNo());
 
         long id = db.insert(SenzorsDbContract.Transaction.TABLE_NAME, null, values);
         db.close();
@@ -61,6 +62,8 @@ public class SenzorsDbSource {
         int transactionAmount;
         String transactionTime;
         String transactionType;
+        String phoneNo;
+
         Log.e(TAG, cursor.getCount() + "f");
         // extract attributes
         while (cursor.moveToNext()) {
@@ -82,9 +85,10 @@ public class SenzorsDbSource {
 
             transactionType = cursor.getString(cursor.getColumnIndex(SenzorsDbContract.Transaction.COLUMN_NAME_transactionType));
 
+            phoneNo = cursor.getString(cursor.getColumnIndex(SenzorsDbContract.Transaction.COLUMN_NAME_phoneNo));
             clientNic = cursor.getString(cursor.getColumnIndex(SenzorsDbContract.Transaction.COLUMN_NAME_clientNIC));
-            System.out.println(id + " " + clientName + " " + clientAccountNo + " " + previousBalance + " " + transactionAmount + " " + transactionTime + " " + transactionType);
-            Transaction transaction = new Transaction(id, clientName, clientNic, clientAccountNo, previousBalance, transactionAmount, transactionTime, transactionType);
+            System.out.println(id + " " + clientName + " " + clientAccountNo + " " + previousBalance + " " + transactionAmount + " " + transactionTime + " " + transactionType + " " + phoneNo);
+            Transaction transaction = new Transaction(id, clientName, clientNic, clientAccountNo, previousBalance, transactionAmount, transactionTime, transactionType, phoneNo);
             //senzAttributes.put(_senzName, _senzValue);
 
 /*

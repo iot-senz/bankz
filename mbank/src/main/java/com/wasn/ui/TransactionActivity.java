@@ -31,6 +31,7 @@ import com.wasn.R;
 import com.wasn.db.SenzorsDbSource;
 import com.wasn.exceptions.InvalidAccountException;
 import com.wasn.exceptions.InvalidInputFieldsException;
+import com.wasn.exceptions.InvalidPhoneNoException;
 import com.wasn.pojos.BalanceQuery;
 import com.wasn.pojos.Transaction;
 import com.wasn.utils.ActivityUtils;
@@ -51,6 +52,7 @@ public class TransactionActivity extends Activity implements View.OnClickListene
     // form components
     private EditText accountEditText;
     private EditText amountEditText;
+    private EditText phoneEditText;
 
     // header
     private RelativeLayout back;
@@ -128,11 +130,13 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         // init text/edit text fields
         accountEditText = (EditText) findViewById(R.id.transaction_layout_account_text);
         amountEditText = (EditText) findViewById(R.id.transaction_layout_amount_text);
+        phoneEditText = (EditText) findViewById(R.id.transaction_layout_phone_text);
         headerText = (TextView) findViewById(R.id.transaction_layout_header_text);
 
         // set custom font
         accountEditText.setTypeface(typeface, Typeface.BOLD);
         amountEditText.setTypeface(typeface, Typeface.BOLD);
+        phoneEditText.setTypeface(typeface, Typeface.BOLD);
         headerText.setTypeface(typeface, Typeface.BOLD);
 
         back = (RelativeLayout) findViewById(R.id.transaction_layout_back);
@@ -168,27 +172,33 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         try {
             String account = accountEditText.getText().toString().trim();
             int amount = Integer.parseInt(amountEditText.getText().toString().trim());
-            ActivityUtils.isValidTransactionFields(account, amount);
+            String phoneNo = phoneEditText.getText().toString().trim();
+            ActivityUtils.isValidTransactionFields(account, amount, phoneNo);
 
             // initialize transaction
-            transaction = new Transaction(1, "", "", account, "", amount, TransactionUtils.getCurrentTime(), "");
+            transaction = new Transaction(1, "", "", account, "", amount, TransactionUtils.getCurrentTime(), "", phoneNo);
 
             //new SenzorsDbSource(TransactionActivity.this).createTransaction(transaction);
             //navigateTransactionDetails(transaction);
             if (NetworkUtil.isAvailableNetwork(this)) {
-                displayInformationMessageDialog("Are you sure you want to do the transaction #Account " + transaction.getClientAccountNo() + " #Amount " + transaction.getTransactionAmount());
+                displayInformationMessageDialog("Are you sure you want to do the transaction #Account " + transaction.getClientAccountNo() + " #Amount " + transaction.getTransactionAmount() + " For " + transaction.getPhoneNo());
             } else {
                 displayMessageDialog("#ERROR", "No network connection");
             }
         } catch (InvalidInputFieldsException | NumberFormatException e) {
             e.printStackTrace();
 
-            displayMessageDialog("#ERROR", "Invalid account no/amount");
+            displayMessageDialog("#ERROR", "Invalid Account no/Amount/Phone No");
         } catch (InvalidAccountException e) {
             e.printStackTrace();
 
-            displayMessageDialog("#ERROR", "Account no should be 12 character length");
+            displayMessageDialog("#ERROR", "Account no should be 12 characters in length");
+        } catch (InvalidPhoneNoException e) {
+            e.printStackTrace();
+
+            displayMessageDialog("#ERROR", "Phone no should be 10 characters  in length");
         }
+
     }
 
     private Senz getPutSenz() {
@@ -196,6 +206,7 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         senzAttributes.put("acc", accountEditText.getText().toString().trim());
         senzAttributes.put("amnt", amountEditText.getText().toString().trim());
         senzAttributes.put("time", ((Long) (System.currentTimeMillis() / 1000)).toString());
+        senzAttributes.put("mobile", phoneEditText.getText().toString().trim());
 
         // new senz
         String id = "_ID";
