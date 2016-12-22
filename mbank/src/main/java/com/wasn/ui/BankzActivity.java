@@ -76,8 +76,8 @@ public class BankzActivity extends Activity implements View.OnClickListener {
         settingsIcon.setTypeface(typeface, Typeface.BOLD);
         settingsText.setTypeface(typeface, Typeface.BOLD);
 
-        mbankIcon = (TextView) findViewById(R.id.mbank_icon);
-        mbankIcon.setTypeface(typeface, Typeface.BOLD);
+        //   mbankIcon = (TextView) findViewById(R.id.mbank_icon);
+        //   mbankIcon.setTypeface(typeface, Typeface.BOLD);
 
         balanceQueryLayout.setOnClickListener(BankzActivity.this);
         summaryLayout.setOnClickListener(BankzActivity.this);

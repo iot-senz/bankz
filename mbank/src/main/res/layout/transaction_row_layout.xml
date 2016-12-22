@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="24sp"
                 android:textColor="#ffffff"
-                android:text="#"/>
+                android:text="$" />
         </RelativeLayout>
 
         <RelativeLayout
