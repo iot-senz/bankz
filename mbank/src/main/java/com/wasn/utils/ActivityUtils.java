@@ -3,12 +3,16 @@ package com.wasn.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.score.senzc.pojos.User;
 import com.wasn.exceptions.InvalidAccountException;
+import com.wasn.exceptions.InvalidIDNumberException;
 import com.wasn.exceptions.InvalidInputFieldsException;
 import com.wasn.exceptions.InvalidPhoneNoException;
+
+import java.util.regex.Pattern;
 
 /**
  * Utility class to handle activity related common functions
@@ -96,6 +100,25 @@ public class ActivityUtils {
         }
 
         return true;
+    }
+
+    public static boolean isValidIDNumber(String idNumber) throws InvalidIDNumberException{
+        /*if (idNumber.length() != 10){
+            throw new InvalidIDNumberException();
+        }
+        */
+
+        String regeX = "[0-9]{9}[vVxX]";
+        if (!Pattern.matches(regeX, idNumber)) {
+            Log.d("DEBUG", idNumber);
+            throw new InvalidIDNumberException();
+        }
+        else{
+            Log.d("DEBUG","right");
+        }
+
+        return true;
+
     }
 
     /**

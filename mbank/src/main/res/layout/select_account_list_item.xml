@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF">
+    <TextView
+        android:id="@+id/account_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account No"
+        android:textColor="#000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+    <TextView
+        android:id="@+id/owner_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Owner Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#000" />
+
+</LinearLayout>

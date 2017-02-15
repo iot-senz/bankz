@@ -27,34 +27,28 @@ import com.score.senz.ISenzService;
 import com.score.senzc.enums.SenzTypeEnum;
 import com.score.senzc.pojos.Senz;
 import com.score.senzc.pojos.User;
+import com.wasn.pojos.Account;
 import com.wasn.R;
-import com.wasn.db.SenzorsDbSource;
-import com.wasn.exceptions.InvalidAccountException;
-import com.wasn.exceptions.InvalidInputFieldsException;
-import com.wasn.exceptions.InvalidPhoneNoException;
-import com.wasn.pojos.BalanceQuery;
-import com.wasn.pojos.Transaction;
+
+import com.wasn.exceptions.InvalidIDNumberException;
+
 import com.wasn.utils.ActivityUtils;
 import com.wasn.utils.NetworkUtil;
-import com.wasn.utils.TransactionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Activity class to do new transaction
- *
- * @author erangaeb@gmail.com (eranga bandara)
+ * Created by senz on 1/19/17.
  */
-public class TransactionActivity extends Activity implements View.OnClickListener {
 
-    private static final String TAG = TransactionActivity.class.getName();
+public class GetAccountActivity extends Activity implements View.OnClickListener {
 
-    // form components
-    private EditText accountEditText;
-    private EditText amountEditText;
-    private EditText phoneEditText;
+    private static final String TAG = GetAccountActivity.class.getName();
 
-    // header
+
+
+    private EditText idEditText;
     private RelativeLayout back;
     private RelativeLayout done;
     private TextView headerText;
@@ -63,15 +57,15 @@ public class TransactionActivity extends Activity implements View.OnClickListene
     private Typeface typeface;
 
     // use to track registration timeout
-    private SenzCountDownTimer senzCountDownTimer;
+    private GetAccountActivity.SenzCountDownTimer senzCountDownTimer;
     private boolean isResponseReceived;
 
     // service interface
     private ISenzService senzService;
     private boolean isServiceBound;
 
-    // current transaction
-    private Transaction transaction;
+
+    private ArrayList<Account> accountDetails;
 
     // service connection
     private ServiceConnection senzServiceConnection = new ServiceConnection() {
@@ -89,13 +83,11 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         }
     };
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+
+
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.transaction_layout);
+        setContentView(R.layout.get_account_layout);
         typeface = Typeface.createFromAsset(getAssets(), "fonts/vegur_2.otf");
 
         initUi();
@@ -107,6 +99,7 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         // register broadcast receiver
         registerReceiver(senzMessageReceiver, new IntentFilter("com.wasn.bankz.DATA_SENZ"));
 
+
         // bind with senz service
         // bind to service from here as well
         if (!isServiceBound) {
@@ -116,99 +109,80 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(senzServiceConnection);
-        unregisterReceiver(senzMessageReceiver);
-    }
 
-    /**
-     * Initialize form components and values
-     */
-    public void initUi() {
-        // init text/edit text fields
-        accountEditText = (EditText) findViewById(R.id.transaction_layout_account_text);
-        amountEditText = (EditText) findViewById(R.id.transaction_layout_amount_text);
-        phoneEditText = (EditText) findViewById(R.id.transaction_layout_phone_text);
-        headerText = (TextView) findViewById(R.id.transaction_layout_header_text);
 
-        // set custom font
-        accountEditText.setTypeface(typeface, Typeface.BOLD);
-        amountEditText.setTypeface(typeface, Typeface.BOLD);
-        phoneEditText.setTypeface(typeface, Typeface.BOLD);
-        headerText.setTypeface(typeface, Typeface.BOLD);
-
-        back = (RelativeLayout) findViewById(R.id.transaction_layout_back);
-        done = (RelativeLayout) findViewById(R.id.transaction_layout_done);
-
-        back.setOnClickListener(TransactionActivity.this);
-        done.setOnClickListener(TransactionActivity.this);
-
-        // balance query receives from previous activity
-        Intent intent2 = getIntent();
-        if (intent2.getExtras() != null) {
-            String accountNo = intent2.getStringExtra("accountNumber");
-            //BalanceQuery balance = intent.getExtras().getParcelable("balance");
-            //accountEditText.setText(balance.getClientAccount(), TextView.BufferType.NORMAL);
-            accountEditText.setText(accountNo);
+    private BroadcastReceiver senzMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG,"laksithsssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+            Log.d(TAG, "Got message from Senz service");
+            handleMessage(intent);
         }
-    }
+    };
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onClick(View view) {
-        if (view == back) {
-            // back to main activity
-            TransactionActivity.this.finish();
-        } else if (view == done) {
-            onClickPut();
-        }
-    }
-
-    private void onClickPut() {
-        ActivityUtils.hideSoftKeyboard(this);
-
+    private void doPut(Senz senz) {
         try {
-            String account = accountEditText.getText().toString().trim();
-            int amount = Integer.parseInt(amountEditText.getText().toString().trim());
-            String phoneNo = phoneEditText.getText().toString().trim();
-            ActivityUtils.isValidTransactionFields(account, amount, phoneNo);
+            senzService.send(senz);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
-            // initialize transaction
-            transaction = new Transaction(1, "", "", account, "", amount, TransactionUtils.getCurrentTime(), "", phoneNo);
+    public void onClick(View view){
+        if (view == back){
+            //back to getAccount Activity
+            GetAccountActivity.this.finish();
+        }
+        else if (view == done) {
+            // 1 go to select account activity on success
+            sendIDNumber();
 
-            //new SenzorsDbSource(TransactionActivity.this).createTransaction(transaction);
-            //navigateTransactionDetails(transaction);
-            if (NetworkUtil.isAvailableNetwork(this)) {
-                displayInformationMessageDialog("Are you sure you want to do the transaction #Account " + transaction.getClientAccountNo() + " #Amount " + transaction.getTransactionAmount() + " For " + transaction.getPhoneNo());
-            } else {
-                displayMessageDialog("#ERROR", "No network connection");
+        }
+    }
+
+    /**
+     * Handle broadcast message receives
+     * Need to handle registration success failure here
+     *
+     * @param intent intent
+     */
+    private void handleMessage(Intent intent) {
+
+        String action = intent.getAction();
+        if (action.equals("com.wasn.bankz.DATA_SENZ")) {
+            Senz senz = intent.getExtras().getParcelable("SENZ");
+
+            if (senz.getAttributes().containsKey("msg") ) {
+                // msg response received
+                ActivityUtils.cancelProgressDialog();
+                isResponseReceived = true;
+                senzCountDownTimer.cancel();
+                String msg = senz.getAttributes().get("msg");
+
+                String accounts = senz.getAttributes().get("accounts");
+
+                //String accounts = "#aaa#sss#ffff#gggg~#qqq#www#eee#rrr~#yyy#uuu#iii#oooo";
+                if (msg != null && msg.equalsIgnoreCase("PUTDONE") && accounts != null) {
+                    Toast.makeText(this, "Accounts fetching successful", Toast.LENGTH_LONG).show();
+                    // stores the accounts in to the account details array and saves it
+
+
+                    navigateSelectAccount(accounts);
+                } else {
+                    String informationMessage = "Failed to complete the Account fetch";
+                    displayMessageDialog("PUT fail", informationMessage);
+                }
+
             }
-        } catch (InvalidInputFieldsException | NumberFormatException e) {
-            e.printStackTrace();
-
-            displayMessageDialog("#ERROR", "Invalid Account no/Amount/Phone No");
-        } catch (InvalidAccountException e) {
-            e.printStackTrace();
-
-            displayMessageDialog("#ERROR", "Account no should be 12 characters in length");
-        } catch (InvalidPhoneNoException e) {
-            e.printStackTrace();
-
-            displayMessageDialog("#ERROR", "Phone no should be 10 characters  in length");
         }
 
     }
 
     private Senz getPutSenz() {
         HashMap<String, String> senzAttributes = new HashMap<>();
-        senzAttributes.put("acc", accountEditText.getText().toString().trim());
-        senzAttributes.put("amnt", amountEditText.getText().toString().trim());
+        senzAttributes.put("idno", idEditText.getText().toString().trim());
         senzAttributes.put("time", ((Long) (System.currentTimeMillis() / 1000)).toString());
-        senzAttributes.put("mobile", phoneEditText.getText().toString().trim());
+
 
         // new senz
         String id = "_ID";
@@ -219,17 +193,53 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         return new Senz(id, signature, senzType, null, receiver, senzAttributes);
     }
 
-    private void doPut(Senz senz) {
-        try {
-            senzService.send(senz);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+    public void initUi(){
+        idEditText = (EditText) findViewById(R.id.get_account_layout_id_number_text);
+        back = (RelativeLayout) findViewById(R.id.get_account_layout_back);
+        done = (RelativeLayout) findViewById(R.id.get_account_layout_done);
+        headerText = (TextView) findViewById(R.id.get_account_layout_header_text);
+
+        //set Custom font
+        idEditText.setTypeface(typeface,Typeface.BOLD);
+        headerText.setTypeface(typeface,Typeface.BOLD);
+
+
+        back.setOnClickListener(GetAccountActivity.this);
+        done.setOnClickListener(GetAccountActivity.this);
+
     }
+
+
+    public void sendIDNumber(){
+        ActivityUtils.hideSoftKeyboard(this);
+        try{
+            String idNumber = idEditText.getText().toString().trim();
+            ActivityUtils.isValidIDNumber(idNumber);
+            idNumber.toUpperCase();
+
+
+            if (NetworkUtil.isAvailableNetwork(this)) {
+                displayInformationMessageDialog("Are you sure you want to fetch Accounts for ID Number " + idNumber);
+            } else {
+                displayMessageDialog("#ERROR", "No network connection");
+            }
+
+        }
+
+        catch (InvalidIDNumberException e){
+            e.printStackTrace();
+            //displayMessageDialog();
+        }
+
+
+    }
+
+
 
     /**
      * Keep track with share response timeout
      */
+
     private class SenzCountDownTimer extends CountDownTimer {
 
         // timer deals with only one senz
@@ -252,68 +262,24 @@ public class TransactionActivity extends Activity implements View.OnClickListene
 
         @Override
         public void onFinish() {
-            ActivityUtils.hideSoftKeyboard(TransactionActivity.this);
+            ActivityUtils.hideSoftKeyboard(GetAccountActivity.this);
             ActivityUtils.cancelProgressDialog();
 
             // display message dialog that we couldn't reach the user
             if (!isResponseReceived) {
-                String message = "Seems we couldn't complete the transaction at this moment";
+                String message = "Seems we couldn't get Account details at this moment";
                 displayMessageDialog("#PUT Fail", message);
             }
         }
     }
 
-    private BroadcastReceiver senzMessageReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Got message from Senz service");
-            handleMessage(intent);
-        }
-    };
-
-    /**
-     * Handle broadcast message receives
-     * Need to handle registration success failure here
-     *
-     * @param intent intent
-     */
-    private void handleMessage(Intent intent) {
-        String action = intent.getAction();
-
-        if (action.equals("com.wasn.bankz.DATA_SENZ")) {
-            Senz senz = intent.getExtras().getParcelable("SENZ");
-
-            if (senz.getAttributes().containsKey("msg")) {
-                // msg response received
-                ActivityUtils.cancelProgressDialog();
-                isResponseReceived = true;
-                senzCountDownTimer.cancel();
-
-                String msg = senz.getAttributes().get("msg");
-                if (msg != null && msg.equalsIgnoreCase("PUTDONE")) {
-                    Toast.makeText(this, "Transaction successful", Toast.LENGTH_LONG).show();
-
-                    // save transaction in db
-                    if (transaction != null)
-                        new SenzorsDbSource(TransactionActivity.this).createTransaction(transaction);
-
-                    // navigate
-                    navigateTransactionDetails(transaction);
-                } else {
-                    String informationMessage = "Failed to complete the transaction";
-                    displayMessageDialog("PUT fail", informationMessage);
-                }
-            }
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(senzServiceConnection);
+        unregisterReceiver(senzMessageReceiver);
     }
 
-    /**
-     * Display message dialog
-     *
-     * @param messageHeader message header
-     * @param message       message to be display
-     */
     public void displayMessageDialog(String messageHeader, String message) {
         final Dialog dialog = new Dialog(this);
 
@@ -348,11 +314,6 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         dialog.show();
     }
 
-    /**
-     * Display message dialog when user going to logout
-     *
-     * @param message
-     */
     public void displayInformationMessageDialog(String message) {
         final Dialog dialog = new Dialog(this);
 
@@ -382,11 +343,11 @@ public class TransactionActivity extends Activity implements View.OnClickListene
                 // do transaction
                 dialog.cancel();
 
-                ActivityUtils.showProgressDialog(TransactionActivity.this, "Please wait...");
+                ActivityUtils.showProgressDialog(GetAccountActivity.this, "Please wait...");
 
                 // start new timer
                 isResponseReceived = false;
-                senzCountDownTimer = new SenzCountDownTimer(16000, 5000, getPutSenz());
+                senzCountDownTimer = new GetAccountActivity.SenzCountDownTimer(16000, 5000, getPutSenz());
                 senzCountDownTimer.start();
             }
         });
@@ -404,15 +365,40 @@ public class TransactionActivity extends Activity implements View.OnClickListene
         dialog.show();
     }
 
+    private void navigateSelectAccount(String accountDetails) {
+        // navigate to select Account
 
-    private void navigateTransactionDetails(Transaction transaction) {
-        // navigate to transaction details
-        Intent intent = new Intent(TransactionActivity.this, TransactionDetailsActivity.class);
-        intent.putExtra("transaction", transaction);
-        intent.putExtra("ACTIVITY_NAME", TransactionActivity.class.getName());
+        Intent intent = new Intent(GetAccountActivity.this, SelectAccountActivity.class);
+        intent.putExtra("accountDetails", accountDetails);
+        //intent.putExtra("idno", )
+        intent.putExtra("ACTIVITY_NAME", GetAccountActivity.class.getName());
         startActivity(intent);
 
-        TransactionActivity.this.finish();
+        GetAccountActivity.this.finish();
     }
 
+
+    /*
+    public ArrayList<Account> addAccountList(String rawString){
+
+        ArrayList<Account> accountsList = new ArrayList<>();
+        String[] separatedTilde = rawString.split("~");
+        String[] separatedHash;
+        for (int i=0; i<separatedTilde.length;i++) {
+            separatedHash = separatedTilde[i].split("#");
+            Account p = new Account();
+            p.setAccountType(separatedHash[1]);
+            p.setAccountNumber(separatedHash[2]);
+            p.setOwnerName(separatedHash[3]);
+            p.setCif(separatedHash[4]);
+            accountsList.add(p);
+
+        }
+        Log.d(TAG,"yahh..... tryign to handle");
+        return accountsList;
+    }*/
+
+
 }
+
+

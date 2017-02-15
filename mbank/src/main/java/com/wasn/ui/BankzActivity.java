@@ -33,7 +33,7 @@ public class BankzActivity extends Activity implements View.OnClickListener {
     TextView summaryIcon;
     TextView settingsText;
     TextView settingsIcon;
-    TextView mbankIcon;
+    //TextView mbankIcon;
 
     /**
      * {@inheritDoc}
@@ -93,7 +93,8 @@ public class BankzActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         if (view == balanceQueryLayout) {
             // display transaction activity
-            startActivity(new Intent(BankzActivity.this, TransactionActivity.class));
+            //startActivity(new Intent(BankzActivity.this, TransactionActivity.class));
+            startActivity(new Intent(BankzActivity.this,GetAccountActivity.class));
             //BankzActivity.this.finish();
         } else if (view == summaryLayout) {
             // display transaction list activity

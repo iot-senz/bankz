@@ -95,6 +95,9 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
         senzCountDownTimer = new SenzCountDownTimer(16000, 5000);
 
+        //Intent intent = new Intent(this,BankzActivity.class);
+        //startActivity(intent);
+
         initUi();
         registerReceiver(senzMessageReceiver, new IntentFilter("com.wasn.bankz.DATA_SENZ"));
     }

@@ -59,12 +59,15 @@
                 android:id="@+id/phoneNo"
                 android:layout_width="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_below="@+id/amount"
                 android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="46dp"
                 android:textSize="15dp"
                 android:text="0775434015"
-                android:textColor="#4a4a4a"></TextView>
+                android:textColor="#4a4a4a"
+                android:layout_below="@+id/account_no"
+                android:layout_toRightOf="@+id/account_no"
+                android:layout_toEndOf="@+id/account_no"
+                android:layout_marginStart="46dp"></TextView>
 
 
         </RelativeLayout>
